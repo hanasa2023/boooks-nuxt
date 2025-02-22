@@ -70,7 +70,7 @@ useHead({
         <div class="flex items-center gap-2">
           <Button variant="ghost" size="icon" asChild>
             <NuxtLink
-              to="https://github.com/hanasa2023/boooks-next"
+              to="https://github.com/hanasa2023/boooks-nuxt"
               target="_blank"
             >
               <Icon icon="radix-icons:github-logo" class="h-5 w-5" />

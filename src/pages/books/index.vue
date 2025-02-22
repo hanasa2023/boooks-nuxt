@@ -124,7 +124,7 @@ onMounted(() => {
           />
         </div>
       </div>
-      <Select :value="selectedCategory" @update:value="handleCategoryChange">
+      <Select v-model="selectedCategory" @change="handleCategoryChange">
         <SelectTrigger class="w-full sm:w-[180px]">
           <SelectValue placeholder="选择分类" />
         </SelectTrigger>

@@ -28,14 +28,24 @@ export default defineNuxtConfig({
   runtimeConfig: {
     adminEmail: process.env.NUXT_ADMIN_EMAIL,
     public: {
-      // OSS_ACCESS_KEY_SECRET: process.env.OSS_ACCESS_KEY_SECRET,
-      // OSS_ACCESS_KEY_ID: process.env.OSS_ACCESS_KEY_ID,
-      // OSS_REGION: process.env.OSS_REGION,
-      // OSS_BUCKET: process.env.OSS_BUCKET,
       cosSecretID: process.env.COS_SECRET_ID,
       cosSecretKey: process.env.COS_SECRET_KEY,
       cosRegion: process.env.COS_REGION,
       cosBucket: process.env.COS_BUCKET,
+    },
+  },
+  app: {
+    head: {
+      title: "Boooks - HEU15系资源导航",
+      link: [{ rel: "icon", type: "image/svg+xml", href: "/img/boooks.svg" }],
+      meta: [
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          name: "description",
+          content: "一个专注于哈尔滨工程大学核专业的资源导航网站",
+        },
+        { name: "format-detection", content: "telephone=no" },
+      ],
     },
   },
 });

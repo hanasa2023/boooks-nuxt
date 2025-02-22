@@ -68,18 +68,18 @@ const onSubmit = form.handleSubmit(async (data: FormData) => {
 </script>
 
 <template>
-  <div class="container py-8 max-w-2xl">
+  <div class="container max-w-2xl py-6 md:py-8">
     <div class="space-y-6">
-      <div>
+      <div class="space-y-2">
         <h2 class="text-2xl font-semibold tracking-tight">资源请求</h2>
         <p class="text-muted-foreground">
           找不到想要的书籍？提交请求，我们会尽快处理。
         </p>
       </div>
 
-      <form @submit="onSubmit">
+      <form @submit="onSubmit" class="space-y-6">
         <div class="space-y-4">
-          <div class="grid gap-4 grid-cols-2">
+          <div class="grid gap-4 sm:grid-cols-2">
             <FormField v-slot="{ field }" name="title">
               <FormItem>
                 <FormLabel>书名</FormLabel>

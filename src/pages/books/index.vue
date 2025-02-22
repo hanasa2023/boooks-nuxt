@@ -21,8 +21,8 @@ const searchQuery = ref("");
 const isLoading = ref(true);
 const { $ossClient } = useNuxtApp();
 const ossClient = $ossClient;
-const selectedBook = ref<Book | null>(null);
-const showPreview = ref(false);
+// const selectedBook = ref<Book | null>(null);
+// const showPreview = ref(false);
 
 // const handlePreview = (book: Book) => {
 //   selectedBook.value = book;
@@ -106,10 +106,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container py-8">
+  <div class="container py-6 md:py-8">
     <!-- 头部搜索和筛选 -->
-    <div class="mb-8 flex items-center justify-between">
-      <div class="flex-1 max-w-md">
+    <div
+      class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div class="w-full sm:max-w-md">
         <div class="relative">
           <Icon
             icon="ic:baseline-search"
@@ -122,8 +124,8 @@ onMounted(() => {
           />
         </div>
       </div>
-      <Select v-model="selectedCategory" @change="handleCategoryChange">
-        <SelectTrigger class="w-[180px]">
+      <Select :value="selectedCategory" @update:value="handleCategoryChange">
+        <SelectTrigger class="w-full sm:w-[180px]">
           <SelectValue placeholder="选择分类" />
         </SelectTrigger>
         <SelectContent>
@@ -140,7 +142,10 @@ onMounted(() => {
     </div>
 
     <!-- 图书网格 -->
-    <div v-if="!isLoading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div
+      v-if="!isLoading"
+      class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
       <Card
         v-for="book in filteredBooks"
         :key="book.id"

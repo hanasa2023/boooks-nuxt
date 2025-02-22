@@ -4,6 +4,16 @@ import { Icon } from "@iconify/vue";
 definePageMeta({
   title: "Boooks - HEU15系资源导航",
 });
+useSeoMeta({
+  title: "Boooks - HEU15系资源导航",
+  ogTitle: "Boooks - HEU15系资源导航",
+  description: "一个专注于哈尔滨工程大学核专业的资源导航网站",
+  ogDescription: "一个专注于哈尔滨工程大学核专业的资源导航网站",
+  ogImage:
+    "https://boooks-1317641150.cos.ap-shanghai.myqcloud.com/images/boooks.svg",
+  twitterCard: "summary_large_image",
+  keywords: "哈尔滨工程大学, 核工程, 15系, 资源导航, 书籍库, 资源请求",
+});
 </script>
 
 <template>
@@ -34,7 +44,7 @@ definePageMeta({
         class="grid md:grid-cols-2 sm:grid-cols-1 gap-8 items-center rounded-xl bg-card p-6 shadow-lg dark:shadow-white/40"
       >
         <img
-          src="https://picsum.photos/600/400"
+          src="https://boooks-1317641150.cos.ap-shanghai.myqcloud.com/images/book-page.png"
           alt="Book Collection"
           class="w-full rounded-lg object-cover shadow-md dark:shadow-white/40 transition-transform hover:scale-105"
         />
@@ -74,7 +84,7 @@ definePageMeta({
           </Button>
         </div>
         <img
-          src="https://preview.hanasaki.tech/images/request-page.png"
+          src="https://boooks-1317641150.cos.ap-shanghai.myqcloud.com/images/request-page.png"
           alt="Resource Request"
           class="w-full rounded-lg object-cover shadow-md dark:shadow-white/40 transition-transform hover:scale-105"
         />

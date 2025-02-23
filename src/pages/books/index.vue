@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icon } from "@iconify/vue";
+import { defineAsyncComponent } from "vue";
 import type { Book, BookCategory } from "~/types/book";
 
 definePageMeta({
@@ -103,6 +104,65 @@ const handleCategoryChange = (value: string) => {
 onMounted(() => {
   fetchBooks();
 });
+
+// 懒加载相关状态
+const ITEMS_PER_PAGE = 12;
+const currentPage = ref(1);
+const isLoadingMore = ref(false);
+
+// 分页后的图书列表
+const paginatedBooks = computed(() => {
+  const start = 0;
+  const end = Math.min(
+    currentPage.value * ITEMS_PER_PAGE,
+    filteredBooks.value.length
+  );
+  return filteredBooks.value.slice(start, end);
+});
+
+// 检查是否还有更多数据
+const hasMore = computed(() => {
+  return paginatedBooks.value.length < filteredBooks.value.length;
+});
+
+// 加载更多
+const loadMore = async () => {
+  if (!hasMore.value || isLoadingMore.value) return;
+
+  isLoadingMore.value = true;
+  currentPage.value++;
+  isLoadingMore.value = false;
+};
+
+// 重置分页
+watch([selectedCategory, searchQuery], () => {
+  currentPage.value = 1;
+});
+
+const loadingTrigger = ref<HTMLElement | null>(null);
+const observerCallback = ([entry]: IntersectionObserverEntry[]) => {
+  if (entry.isIntersecting && !isLoading.value && !isLoadingMore.value) {
+    loadMore();
+  }
+};
+
+onMounted(() => {
+  const observer = new IntersectionObserver(observerCallback, {
+    threshold: 0.5,
+  });
+
+  if (loadingTrigger.value) {
+    observer.observe(loadingTrigger.value);
+  }
+});
+
+const LazyBookCard = defineAsyncComponent(
+  () => import("~/components/BookCard.vue")
+);
+
+const showLoadingState = computed(() => {
+  return isLoading.value && filteredBooks.value.length === 0;
+});
 </script>
 
 <template>
@@ -146,65 +206,38 @@ onMounted(() => {
       v-if="!isLoading"
       class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     >
-      <Card
-        v-for="book in filteredBooks"
-        :key="book.id"
-        class="overflow-hidden hover:shadow-lg dark:hover:shadow-white/40 transition-shadow"
-      >
-        <div class="aspect-[3/4] relative">
-          <img
-            :src="book.cover"
-            :alt="book.title"
-            class="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
-        <div class="p-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <h3 class="font-semibold line-clamp-1">{{ book.title }}</h3>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{{ book.title }}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <p class="text-sm text-muted-foreground mt-1">{{ book.author }}</p>
-          <div class="mt-2 flex items-center justify-between text-sm">
-            <span class="text-muted-foreground">
-              {{ formatFileSize(book.size) }}
-            </span>
-            <Badge>{{ book.format.toUpperCase() }}</Badge>
-          </div>
-          <div class="flex gap-2 mt-4">
-            <Button class="flex-1" asChild>
-              <a
-                :href="book.downloadUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                下载
-              </a>
-            </Button>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button variant="outline" asChild>
-                    <NuxtLink :to="`/${book.id}`">
-                      <Icon icon="ic:baseline-preview" class="h-4 w-4" />
-                    </NuxtLink>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>在线预览</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
-      </Card>
+      <ClientOnly>
+        <template v-for="book in paginatedBooks" :key="book.id">
+          <LazyBookCard :book="book" :format-file-size="formatFileSize" />
+        </template>
+      </ClientOnly>
+    </div>
+
+    <!-- 加载更多触发器 -->
+    <div
+      v-if="hasMore && !isLoading && paginatedBooks.length > 0"
+      ref="loadingTrigger"
+      class="flex justify-center py-8"
+    >
+      <Button variant="outline" :disabled="isLoadingMore" @click="loadMore">
+        <Icon
+          v-if="isLoadingMore"
+          icon="eos-icons:loading"
+          class="mr-2 h-4 w-4 animate-spin"
+        />
+        {{
+          isLoadingMore
+            ? "加载中..."
+            : `加载更多 (${paginatedBooks.length}/${filteredBooks.length})`
+        }}
+      </Button>
     </div>
 
     <!-- 加载状态 -->
-    <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div
+      v-if="showLoadingState"
+      class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+    >
       <Card v-for="n in 8" :key="n" class="overflow-hidden">
         <div class="aspect-[3/4] bg-muted animate-pulse" />
         <div class="p-4 space-y-3">

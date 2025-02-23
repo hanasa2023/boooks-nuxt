@@ -44,7 +44,7 @@ export default defineNuxtPlugin(() => {
             ) || [];
 
           const categoryValues =
-            categoryTags.length > 0 ? categoryTags.map((tag) => tag.Value) : [];
+            categoryTags.length > 0 ? categoryTags[0].Value.split(",") : [];
 
           return {
             id: obj.Key || "",

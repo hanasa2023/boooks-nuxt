@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
-import { Analytics } from "@vercel/analytics/nuxt";
-import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
 definePageMeta({
   title: "关于 - Boooks",
@@ -149,8 +147,4 @@ const teamMembers = [
       </Card>
     </section>
   </div>
-
-  <!-- Vercel Components -->
-  <SpeedInsights />
-  <Analytics />
 </template>

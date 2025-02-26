@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@nuxt/image",
     "nuxt-nodemailer",
+    "@nuxt/scripts",
   ],
   shadcn: {
     prefix: "",
@@ -25,6 +26,11 @@ export default defineNuxtConfig({
       pass: "",
     },
   },
+  scripts: {
+    registry: {
+      googleAnalytics: true,
+    },
+  },
   runtimeConfig: {
     adminEmail: process.env.NUXT_ADMIN_EMAIL,
     public: {
@@ -32,6 +38,13 @@ export default defineNuxtConfig({
       cosSecretKey: process.env.COS_SECRET_KEY,
       cosRegion: process.env.COS_REGION,
       cosBucket: process.env.COS_BUCKET,
+      scripts: {
+        googleAnalytics: {
+          // .env
+          // NUXT_PUBLIC_SCRIPTS_GOOGLE_ANALYTICS_ID=<your-id>
+          id: "",
+        },
+      },
     },
   },
   app: {
